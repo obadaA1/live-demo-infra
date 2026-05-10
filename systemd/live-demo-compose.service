@@ -6,7 +6,7 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-WorkingDirectory=/opt/live-demo-infra
+WorkingDirectory=/home/obada/PARA/Projects/live-demo-infra
 RemainAfterExit=yes
 ExecStart=/usr/bin/docker compose pull
 ExecStart=/usr/bin/docker compose up -d --remove-orphans

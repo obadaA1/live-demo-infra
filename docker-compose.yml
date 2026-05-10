@@ -1,6 +1,9 @@
 services:
   fashion-api:
     image: ${FASHION_API_IMAGE:-ghcr.io/obadaa1/fashion-attribute-recognition:main}
+    build:
+      context: ../fashion-prod-ready
+      dockerfile: Dockerfile
     restart: unless-stopped
     environment:
       FASHION_MODEL_ROOT: /models/fashion/current
@@ -35,6 +38,9 @@ services:
 
   squat-api:
     image: ${SQUAT_API_IMAGE:-ghcr.io/obadaa1/squat_counter:main}
+    build:
+      context: ../squat_counter
+      dockerfile: Dockerfile
     restart: unless-stopped
     environment:
       SQUAT_MODEL_ROOT: /models/squat/current

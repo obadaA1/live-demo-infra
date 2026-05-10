@@ -18,5 +18,11 @@ This repo owns Docker Compose, Cloudflare Tunnel templates, systemd unit example
 - Model artifacts mount read-only from `/models/.../current`.
 - Upload limits are enforced at the frontend, API, and Cloudflare WAF layer.
 
+## Local Configuration (This Machine)
+
+For local development and hosting on this machine, model and data roots are stored in the project directory and mapped via `.env`:
+- `models/` -> `/home/obada/PARA/Projects/live-demo-infra/models`
+- `data/` -> `/home/obada/PARA/Projects/live-demo-infra/data`
+
 See `runbooks/deployment.md` and `runbooks/artifacts.md` for operational steps.
 

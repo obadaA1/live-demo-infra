@@ -11,3 +11,7 @@ cloudflared/credentials.*
 *.tmp
 .DS_Store
 
+# Ignored data and model directories
+models/
+data/
+outputs/
