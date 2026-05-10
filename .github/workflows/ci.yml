@@ -13,5 +13,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: docker compose config
-
+      - name: Validate docker compose syntax
+        run: docker compose config --quiet
+      - name: Verify hardening keys are present on every service
+        run: |
+          set -e
+          for key in read_only cap_drop no-new-privileges mem_limit pids_limit healthcheck; do
+            count=$(grep -c "$key" docker-compose.yml || true)
+            if [ "$count" -lt 2 ]; then
+              echo "missing or under-applied hardening key: $key (found $count, expected >=2)"
+              exit 1
+            fi
+          done
+          echo "all hardening keys present on both services"
+      - name: Verify ports bind to localhost only
+        run: |
+          if grep -E '^\s*-\s*"[0-9]' docker-compose.yml | grep -v '127.0.0.1'; then
+            echo "found port binding not restricted to 127.0.0.1"
+            exit 1
+          fi
+          echo "all ports bound to 127.0.0.1"
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

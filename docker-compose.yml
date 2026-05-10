@@ -12,17 +12,26 @@ services:
       - ${FASHION_MODEL_ROOT:-/models/fashion/current}:/models/fashion/current:ro
     read_only: true
     tmpfs:
-      - /tmp:size=64m,mode=1777
+      - /tmp:size=128m,mode=1777
     cap_drop:
       - ALL
     security_opt:
       - no-new-privileges:true
+    mem_limit: 2g
+    mem_reservation: 1g
+    cpus: 1.5
+    pids_limit: 256
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=5)"]
       interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 30s
+      start_period: 60s
 
   squat-api:
     image: ${SQUAT_API_IMAGE:-ghcr.io/obadaa1/squat_counter:main}
@@ -44,6 +53,15 @@ services:
       - ALL
     security_opt:
       - no-new-privileges:true
+    mem_limit: 1g
+    mem_reservation: 512m
+    cpus: 1.0
+    pids_limit: 256
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5)"]
       interval: 30s
