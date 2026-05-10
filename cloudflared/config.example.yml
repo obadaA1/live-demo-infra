@@ -1,0 +1,10 @@
+tunnel: live-demo-apis
+credentials-file: /etc/cloudflared/live-demo-apis.json
+
+ingress:
+  - hostname: fashion-api.obadaalsehli.com
+    service: http://127.0.0.1:8011
+  - hostname: squat-api.obadaalsehli.com
+    service: http://127.0.0.1:8012
+  - service: http_status:404
+

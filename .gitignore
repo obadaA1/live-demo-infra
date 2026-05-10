@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+
+cloudflared/*.json
+cloudflared/*.pem
+cloudflared/cert.*
+cloudflared/credentials.*
+
+*.log
+*.tmp
+.DS_Store
+

@@ -1,0 +1,52 @@
+services:
+  fashion-api:
+    image: ${FASHION_API_IMAGE:-ghcr.io/obadaa1/fashion-attribute-recognition:main}
+    restart: unless-stopped
+    environment:
+      FASHION_MODEL_ROOT: /models/fashion/current
+      FASHION_CORS_ORIGINS: ${FASHION_CORS_ORIGINS:-https://obadaalsehli.com,http://localhost:3000}
+      FASHION_MAX_IMAGE_BYTES: 10485760
+    ports:
+      - "127.0.0.1:${FASHION_API_PORT:-8011}:8000"
+    volumes:
+      - ${FASHION_MODEL_ROOT:-/models/fashion/current}:/models/fashion/current:ro
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=5)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  squat-api:
+    image: ${SQUAT_API_IMAGE:-ghcr.io/obadaa1/squat_counter:main}
+    restart: unless-stopped
+    environment:
+      SQUAT_MODEL_ROOT: /models/squat/current
+      SQUAT_SAMPLE_ROOT: /data/squat/samples
+      SQUAT_CORS_ORIGINS: ${SQUAT_CORS_ORIGINS:-https://obadaalsehli.com,http://localhost:3000}
+      SQUAT_MAX_VIDEO_BYTES: 52428800
+    ports:
+      - "127.0.0.1:${SQUAT_API_PORT:-8012}:8000"
+    volumes:
+      - ${SQUAT_MODEL_ROOT:-/models/squat/current}:/models/squat/current:ro
+      - ${SQUAT_SAMPLE_ROOT:-/data/squat/samples}:/data/squat/samples:ro
+    read_only: true
+    tmpfs:
+      - /tmp:size=512m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=5)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
